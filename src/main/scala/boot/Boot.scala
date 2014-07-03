@@ -7,9 +7,14 @@
 
 package boot
 
+import scalaj.http.Http
+
 object Boot {
-  
-  def main(args : Array[String]) =
-    println( "Hello World!" )
+	var request: Http.Request = Http("http://google.com/")
+
+	def main(args : Array[String]) {
+		val result = request.asString
+		println(result)		
+  	}
     
 }
