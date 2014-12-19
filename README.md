@@ -1,4 +1,4 @@
 scallot
 =======
 
-Scala HTTP Boot
+Scala HTTP Bot to parse embed videos from web pages
