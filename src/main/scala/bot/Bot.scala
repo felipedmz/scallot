@@ -23,7 +23,15 @@ object Bot {
   	}
 
   	def searchForEmbeds(urls: List[String]): List[String] = {
-  		println("\n@TODO searchForEmbeds")
+  		for (url <- ways) {
+	  		val html  = getRequest(url)
+	  		val embed = """<embed(.)*>(.)*</embed>""".r
+			val found = (embed findAllIn html).toList
+	  		for (e <- found) {
+				println(e)
+				println("\n")
+			}
+		}
   		urls
   	}
 
@@ -35,8 +43,8 @@ object Bot {
   	}
 
   	def findLinks(html: String): Unit = {
-  		val link   = """http://[a-z0-9./?!@#$%&*)(-_=+;:,\|^~}{]*""".r
-		val found  = (link findAllIn html).toList
+  		val link  = """http://[a-z0-9./?!@#$%&*)(-_=+;:,\|^~}{]*""".r
+		val found = (link findAllIn html).toList
 		ways = ways union found
   	}
 
