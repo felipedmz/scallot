@@ -27,8 +27,8 @@ object Bot {
   		for (url <- ways) { // this is like a foreach
   			try {
 		  		val html  = getRequest(url)
-		  		val embed = """<embed(.)*>(.)*</embed>""".r // this is a regexp
-				val found = (embed findAllIn html).toList
+		  		val embed = """<embed(.)*>(.)*</embed>""".r // this is a Regex
+				val found = (embed findAllIn html).toList   // syntax sugar for "embed.findAllIn(html)"
 		  		for (e <- found) {
 					println(e)
 					println("\n")
