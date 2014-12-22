@@ -8,6 +8,7 @@ package bot
 
 import scalaj.http._
 import scala.io.Source
+import jdbc.Mysql
 
 object Bot {
 	var ways: List[String] = List()
@@ -18,24 +19,40 @@ object Bot {
 		loadPrimarySources
 
 		println("\nSearching for embeds")
-		embeds = searchForEmbeds(ways)
+		searchForEmbeds(ways)
+
+		save(embeds)
   	}
 
-  	def searchForEmbeds(urls: List[String]): List[String] = {
+  	def save(videos: List[String]): Unit = {
+  		val db = new Mysql("localhost", "test", "root", "test")
+  		val conn = db.getConnection()
+  		try {
+	  		for (video <- videos) {
+	  			val statement = conn.prepareStatement("INSERT INTO videos (embed) VALUES (?)")
+	    		statement.setString(1, video)
+	    		statement.executeUpdate
+	  		}
+	  	} catch {
+	  		case error: Exception => error.printStackTrace
+	  	} finally {
+   			db.closeConnection()
+  		}
+  	}
+
+  	def searchForEmbeds(urls: List[String]): Unit= {
   		for (url <- ways) {
   			try {
 		  		val html  = getRequest(url)
 		  		val embed = """<embed(.)*>(.)*</embed>""".r
 				val found = (embed findAllIn html).toList
 		  		for (e <- found) {
-					println(e)
-					println("\n")
+					embeds = embeds :+ e
 				}
 			} catch {
 				case error: Exception => println(s"$error >>> $url \n")
 			}
 		}
-  		urls
   	}
 
   	def loadPrimarySources(): Unit = {
