@@ -25,12 +25,16 @@ object Bot {
 
   	def searchForEmbeds(urls: List[String]): List[String] = {
   		for (url <- ways) { // this is like a foreach
-	  		val html  = getRequest(url)
-	  		val embed = """<embed(.)*>(.)*</embed>""".r // this is a regexp
-			val found = (embed findAllIn html).toList
-	  		for (e <- found) {
-				println(e)
-				println("\n")
+  			try {
+		  		val html  = getRequest(url)
+		  		val embed = """<embed(.)*>(.)*</embed>""".r // this is a regexp
+				val found = (embed findAllIn html).toList
+		  		for (e <- found) {
+					println(e)
+					println("\n")
+				}
+			} catch {
+				case error: Exception => println(s"$error >>> $url \n")
 			}
 		}
   		urls // the last line is the return
@@ -52,6 +56,10 @@ object Bot {
   	def getRequest(url: String): String = {
   		/* How Http is a wrapped lib, this sintax sounds like Java, 
   		   with the function returning directly the last line */
-  		Http(url).option(HttpOptions.connTimeout(2000)).header("User-Agent", "Opera").asString
+  		Http(url)
+  			.option(HttpOptions.connTimeout(2000))
+  			.option(HttpOptions.readTimeout(5000))
+  			.header("User-Agent", "Opera")
+  			.asString
   	}
 }
