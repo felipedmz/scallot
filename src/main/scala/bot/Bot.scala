@@ -1,5 +1,5 @@
 /**
- * @package   Boot
+ * @package   Bot
  * @author    Felipe Maziero <flpmaziero@gmail.com>
  * @copyright 2014 Felipe Maziero
  */
@@ -18,18 +18,21 @@ object Bot {
 		println("\nReading primary sources")
 		loadPrimarySources
 
-		println("\nSearching for embeds")
+		println("\nSearching for embeds\n")
 		searchForEmbeds(ways)
 
+		println("\nSaving in MySQL database")
 		save(embeds)
+
+		println("\nHave fun!")
   	}
 
   	def save(videos: List[String]): Unit = {
-  		val db = new Mysql("localhost", "test", "root", "test")
+  		val db = new Mysql("localhost", "scallot", "root", "test")
   		val conn = db.getConnection()
   		try {
 	  		for (video <- videos) {
-	  			val statement = conn.prepareStatement("INSERT INTO videos (embed) VALUES (?)")
+	  			val statement = conn.prepareStatement("INSERT INTO video (embed_html) VALUES (?)")
 	    		statement.setString(1, video)
 	    		statement.executeUpdate
 	  		}
@@ -50,7 +53,7 @@ object Bot {
 					embeds = embeds :+ e
 				}
 			} catch {
-				case error: Exception => println(s"$error >>> $url \n")
+				case error: Exception => println(s"$error on $url \n")
 			}
 		}
   	}
