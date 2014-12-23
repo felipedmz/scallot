@@ -19,12 +19,12 @@
 -- Table structure for table `videos`
 --
 
-DROP TABLE IF EXISTS `videos`;
+DROP TABLE IF EXISTS `video`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `videos` (
+CREATE TABLE `video` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `embed` text NOT NULL,
+  `embed_html` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;

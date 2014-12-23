@@ -1,5 +1,5 @@
 /**
- * @package   Bot
+ * @package   Jdbc
  * @author    Felipe Maziero <flpmaziero@gmail.com>
  * @copyright 2014 Felipe Maziero
  */
