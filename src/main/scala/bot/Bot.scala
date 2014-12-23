@@ -15,16 +15,21 @@ object Bot {
 	var embeds: List[String] = List()
 
 	def main(args: Array[String]) {
-		println("\nReading primary sources")
+		println("\nReading primary sources\n")
 		loadPrimarySources
 
 		println("\nSearching for embeds\n")
 		searchForEmbeds(ways)
 
-		println("\nSaving in MySQL database")
-		save(embeds)
+		val totalFound = embeds.count(_ != "")
+		println(s"\n$totalFound items found")
 
-		println("\nHave fun!")
+		if (totalFound > 0) {
+			println("\nSaving in MySQL database")
+			save(embeds)	
+		}
+		
+		println("\nFinished")
   	}
 
   	def save(videos: List[String]): Unit = {
@@ -53,7 +58,7 @@ object Bot {
 					embeds = embeds :+ e
 				}
 			} catch {
-				case error: Exception => println(s"$error on $url \n")
+				case error: Exception => println(s"$error on $url")
 			}
 		}
   	}
@@ -72,6 +77,7 @@ object Bot {
   	}
 
   	def getRequest(url: String): String = {
+  		println(s"Looking at: $url")
   		Http(url)
   			.option(HttpOptions.connTimeout(2000))
   			.option(HttpOptions.readTimeout(5000))
