@@ -66,14 +66,21 @@ object Bot {
   	def loadPrimarySources(): Unit = {
   		for (line <- Source.fromFile("sources.txt").getLines()) {
 			val result = getRequest(line)
-			findLinks(result)
+			findLinks(line, result)
 		}
   	}
 
-  	def findLinks(html: String): Unit = {
-  		val link  = """http://[a-z0-9./?!@#$%&*)(-_=+;:,\|^~}{]*""".r
-		val found = (link findAllIn html).toList
-		ways = ways union found
+  	def findLinks(baseUri: String, html: String): Unit = {
+  		val links  = """href=["](https?:/)?/[a-z0-9./?!@#$%&*)(-_=+;:,\|^~}{]*["]""".r
+		val found = (links findAllIn html).toList
+		for (i <- found) {
+			var link = i
+			link = link.replaceAllLiterally("href=", "").replaceAllLiterally("\"", "")
+			if (link.indexOf("http") < 0) {
+				link = baseUri + link.substring(1)
+			}
+			ways = ways :+ link
+		}
   	}
 
   	def getRequest(url: String): String = {
